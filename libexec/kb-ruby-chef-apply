@@ -79,10 +79,12 @@ cookbook_name   = "(chef-apply cookbook)"
 cookbook_recipe = "(chef-apply recipe)"
 cookbook_collection = single_cookbook_collection(cookbook_name)
 
+node_data = JSON.parse(::File.read("/tmp/vagrant-chef-1/test-kitchen.json"))
+
 run_context = if client.events.nil?
-  Chef::RunContext.new(client.node, cookbook_collection)
+  Chef::RunContext.new(node_data, cookbook_collection)
 else
-  Chef::RunContext.new(client.node, cookbook_collection, client.events)
+  Chef::RunContext.new(node_data, cookbook_collection, client.events)
 end
 
 recipe = Chef::Recipe.new(cookbook_name, cookbook_recipe, run_context)
